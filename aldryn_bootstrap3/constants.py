@@ -64,6 +64,7 @@ SIZES = tuple([size for size, name in SIZE_CHOICES])
 
 SIZE_DEFAULT = 'md'
 
+GUTTER = 30
 
 # WARNING: changing DEVICE_CHOICES identifier will cause model creation to change and
 #          requires database migrations!
@@ -71,36 +72,43 @@ DEVICES = (
     {
         'identifier': 'xs',
         'name': _("mobile phones"),
-        'width': 768,
-        'width_gutter': 750,
+        'width': None,
+        'width_max': 750,
+        'viewport_width_min': 0,
+        'viewport_width_max': 767,
         'icon': 'mobile-phone',
     },
     {
         'identifier': 'sm',
         'name': _("tablets"),
-        'width': 768,
-        'width_gutter': 750,
+        'width': 750,
+        'viewport_width_min': 768,
+        'viewport_width_max': 991,
         'icon': 'tablet',
     },
     {
         'identifier': 'md',
         'name': _("laptops"),
-        'width': 992,
-        'width_gutter': 970,
+        'width': 970,
+        'viewport_width_min': 992,
+        'viewport_width_max': 1199,
         'icon': 'laptop',
     },
     {
         'identifier': 'lg',
         'name': _("large desktops"),
-        'width': 1200,
-        'width_gutter': 1170,
+        'width': 1170,
+        'viewport_width_min': 1200,
+        'viewport_width_max': None,  # TODO: find a better value
         'icon': 'desktop',
     },
 )
 for device in DEVICES:
     identifier = device['identifier']
-    device['long_description'] = "{name} (<{width}px)".format(**device)
+    device['long_description'] = "{name} ({viewport_width_min}px to {viewport_width_max}px)".format(**device)
     device['size_name'] = dict(SIZE_CHOICES).get(identifier)
+    if 'width_max' not in device.keys():
+        device['width_max'] = device['width']
 
 DEVICE_DICT = {device['identifier']: device for device in DEVICES}
 

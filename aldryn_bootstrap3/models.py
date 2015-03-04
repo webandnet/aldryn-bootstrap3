@@ -23,6 +23,7 @@ import filer.fields.folder
 import djangocms_text_ckeditor.fields
 
 from . import model_fields, constants, utils
+from .conf import settings
 
 
 ##########
@@ -300,9 +301,10 @@ class Boostrap3ImagePlugin(CMSPlugin):
             txt = self.file.label
         return txt
 
-    def srcset(self):
+    def srcset(self, column_sizes, aspect_ratios):
         if not self.file:
             return []
+        return utils.srcset_and_sizes(column_sizes)
         items = collections.OrderedDict()
         if self.aspect_ratio:
             aspect_width, aspect_height = tuple([int(i) for i in self.aspect_ratio.split('x')])
